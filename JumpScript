@@ -1,0 +1,172 @@
+local Gui = Instance.new('ScreenGui')
+local Box = Instance.new('TextBox')
+local But = Instance.new('TextButton')
+local boolean = false
+local w = true
+local But2 = Instance.new('TextButton')
+local bool = false
+local But3 = Instance.new('TextButton')
+local Frame = Instance.new('Frame')
+local Label = Instance.new('TextLabel')
+local c = true
+
+local UIS = game:GetService('UserInputService')
+
+local frame = Frame
+
+
+
+local dragToggle = nil
+
+local dragSpeed = 0.25
+
+local dragStart = nil
+
+local startPos = nil
+
+
+
+local function updateInput(input)
+
+	local delta = input.Position - dragStart
+
+	local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+
+		startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+
+	game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+
+end
+
+
+
+frame.InputBegan:Connect(function(input)
+if c == true then
+	if (input.UserInputType == Enum.UserInputType.MouseButton1) then 
+
+		dragToggle = true
+
+		dragStart = input.Position
+
+		startPos = frame.Position
+
+		input.Changed:Connect(function()
+
+			if input.UserInputState == Enum.UserInputState.End then
+
+				dragToggle = false
+
+			end
+
+		end)
+
+	end
+end
+
+end)
+
+
+
+UIS.InputChanged:Connect(function(input)
+
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+
+		if dragToggle then
+
+			updateInput(input)
+
+		end
+
+	end
+
+end)
+
+Gui.Parent = game.CoreGui
+Gui.Name = 'JumpGui'
+Gui.ResetOnSpawn = false
+
+Frame.Parent = Gui
+Frame.Position = UDim2.new(0.14,0, 0.50,0)
+Frame.Size = UDim2.new(0.12,0, 0.12,0)
+
+Box.Parent = Frame
+Box.Position = UDim2.new(0,0 , 0,0)
+Box.Size = UDim2.new(0.5,0, 1,0)
+Box.Text = game.Players.LocalPlayer.Character.Humanoid.JumpPower
+Box.TextScaled = true
+
+But.Parent = Frame
+But.Position = UDim2.new(-0.2,0, 0,0)
+But.Size = UDim2.new(0, 39, 0,39)
+But.Text = 'Hide'
+But.BackgroundColor3 = Color3.fromRGB(0,255,0)
+
+But2.Parent = Frame
+But2.Position = UDim2.new(0.23,0, 1,0)
+But2.Size = UDim2.new(0, 39, 0,39)
+But2.Text = 'Off'
+But2.BackgroundColor3 = Color3.fromRGB(0,255,0)
+
+But3.Parent = Frame
+But3.Position = UDim2.new(0,0, -0.39,0)
+But3.Size = UDim2.new(0, 39, 0,39)
+But3.Text = 'Destroy'
+But3.BackgroundColor3 = Color3.fromRGB(255,0,0)
+
+Label.Parent = Frame
+Label.Position = UDim2.new(0.5,0, 0,0)
+Label.Size = UDim2.new(0.5,0 , 1,0)
+Label.Text = 'Move'
+Label.TextScaled = true
+
+But.MouseButton1Click:Connect(function()
+   if boolean == false then
+   boolean = true
+   Box.Visible = false
+   But2.Visible = false
+   But3.Visible = false
+   Label.BackgroundTransparency = 1
+   Label.Text = ' '
+   Frame.BackgroundTransparency = 1
+   c = false
+   But.BackgroundColor3 = Color3.fromRGB(255,0,0)
+   else
+    boolean = false
+    Box.Visible = true
+    But2.Visible = true
+    But3.Visible = true
+    Label.BackgroundTransparency = 0
+    Label.Text = 'Move'
+    Frame.BackgroundTransparency = 0
+    c = true
+    But.BackgroundColor3 = Color3.fromRGB(0,255,0)
+   end
+end)
+
+But2.MouseButton1Click:Connect(function()
+if bool == false then
+    bool = true
+    But2.BackgroundColor3 = Color3.fromRGB(255,0,0)
+    But2.Text = 'On'
+    w = false
+else
+    bool = false
+But2.BackgroundColor3 = Color3.fromRGB(0,255,0)
+But2.Text = 'Off'
+w = true
+end
+end)
+
+But3.MouseButton1Click:Connect(function()
+Gui:Destroy()
+end)
+
+while wait() do
+while w == true do
+    game:GetService('RunService').RenderStepped:wait()
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = Box.Text
+if not game.CoreGui:FindFirstChild('JumpGui') then
+    w = false
+end
+end
+end
